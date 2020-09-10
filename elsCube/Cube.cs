@@ -31,7 +31,7 @@ namespace elsCube
         {
             foreach(var nodes in _nodes)
             {
-                --nodes.Y;
+                ++nodes.Y;
             }
         }
 
@@ -89,27 +89,27 @@ namespace elsCube
             {
                 case SpinType.Spin0:
                     nodes.Add(this.Nodes[0]);
-                    nodes.Add(new Node(this.Nodes[1].X + 1, this.Nodes[1].Y - 1, true, this.BackColor));
-                    nodes.Add(new Node(this.Nodes[2].X + 2, this.Nodes[2].Y - 2, true, this.BackColor));
-                    nodes.Add(new Node(this.Nodes[3].X + 3, this.Nodes[3].Y - 3, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[1].X + 1, this.Nodes[1].Y + 1, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[2].X + 2, this.Nodes[2].Y + 2, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[3].X + 3, this.Nodes[3].Y + 3, true, this.BackColor));
                     break;
                 case SpinType.Spin90:
-                    nodes.Add(this.Nodes[0]);
-                    nodes.Add(new Node(this.Nodes[1].X - 1, this.Nodes[1].Y + 1, true, this.BackColor));
-                    nodes.Add(new Node(this.Nodes[2].X - 2, this.Nodes[2].Y + 2, true, this.BackColor));
-                    nodes.Add(new Node(this.Nodes[3].X - 3, this.Nodes[3].Y + 3, true, this.BackColor));
-                    break;
-                case SpinType.Spin180:
                     nodes.Add(this.Nodes[0]);
                     nodes.Add(new Node(this.Nodes[1].X - 1, this.Nodes[1].Y - 1, true, this.BackColor));
                     nodes.Add(new Node(this.Nodes[2].X - 2, this.Nodes[2].Y - 2, true, this.BackColor));
                     nodes.Add(new Node(this.Nodes[3].X - 3, this.Nodes[3].Y - 3, true, this.BackColor));
                     break;
+                case SpinType.Spin180:
+                    nodes.Add(this.Nodes[0]);
+                    nodes.Add(new Node(this.Nodes[1].X - 1, this.Nodes[1].Y + 1, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[2].X - 2, this.Nodes[2].Y + 2, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[3].X - 3, this.Nodes[3].Y + 3, true, this.BackColor));
+                    break;
                 case SpinType.Spin270:
                     nodes.Add(this.Nodes[0]);
-                    nodes.Add(new Node(this.Nodes[1].X + 1, this.Nodes[1].Y + 1, true, this.BackColor));
-                    nodes.Add(new Node(this.Nodes[2].X + 2, this.Nodes[2].Y + 2, true, this.BackColor));
-                    nodes.Add(new Node(this.Nodes[3].X + 3, this.Nodes[3].Y + 3, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[1].X + 1, this.Nodes[1].Y - 1, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[2].X + 2, this.Nodes[2].Y - 2, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[3].X + 3, this.Nodes[3].Y - 3, true, this.BackColor));
                     break;
             }
             return nodes;
@@ -122,27 +122,27 @@ namespace elsCube
             {
                 case SpinType.Spin0:
                     nodes.Add(this.Nodes[0]);
-                    nodes.Add(new Node(this.Nodes[1].X + 1, this.Nodes[1].Y - 1, true, this.BackColor));
-                    nodes.Add(new Node(this.Nodes[2].X + 2, this.Nodes[2].Y - 2, true, this.BackColor));
-                    nodes.Add(new Node(this.Nodes[3].X - 1, this.Nodes[3].Y - 1, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[1].X + 1, this.Nodes[1].Y + 1, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[2].X + 2, this.Nodes[2].Y + 2, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[3].X - 1, this.Nodes[3].Y + 1, true, this.BackColor));
                     break;
                 case SpinType.Spin90:
                     nodes.Add(this.Nodes[0]);
-                    nodes.Add(new Node(this.Nodes[1].X - 1, this.Nodes[1].Y - 1, true, this.BackColor));
-                    nodes.Add(new Node(this.Nodes[2].X - 2, this.Nodes[2].Y - 2, true, this.BackColor));
-                    nodes.Add(new Node(this.Nodes[3].X - 1, this.Nodes[3].Y + 1, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[1].X - 1, this.Nodes[1].Y + 1, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[2].X - 2, this.Nodes[2].Y + 2, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[3].X - 1, this.Nodes[3].Y - 1, true, this.BackColor));
                     break;
                 case SpinType.Spin180:
                     nodes.Add(this.Nodes[0]);
-                    nodes.Add(new Node(this.Nodes[1].X - 1, this.Nodes[1].Y + 1, true, this.BackColor));
-                    nodes.Add(new Node(this.Nodes[2].X - 2, this.Nodes[2].Y + 2, true, this.BackColor));
-                    nodes.Add(new Node(this.Nodes[3].X + 1, this.Nodes[3].Y + 1, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[1].X - 1, this.Nodes[1].Y - 1, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[2].X - 2, this.Nodes[2].Y - 2, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[3].X + 1, this.Nodes[3].Y - 1, true, this.BackColor));
                     break;
                 case SpinType.Spin270:
                     nodes.Add(this.Nodes[0]);
-                    nodes.Add(new Node(this.Nodes[1].X + 1, this.Nodes[1].Y + 1, true, this.BackColor));
-                    nodes.Add(new Node(this.Nodes[2].X + 2, this.Nodes[2].Y + 2, true, this.BackColor));
-                    nodes.Add(new Node(this.Nodes[3].X + 1, this.Nodes[3].Y - 1, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[1].X + 1, this.Nodes[1].Y - 1, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[2].X + 2, this.Nodes[2].Y - 2, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[3].X + 1, this.Nodes[3].Y + 1, true, this.BackColor));
 
                     break;
             }
@@ -155,30 +155,30 @@ namespace elsCube
             switch (this.Spin)
             {
                 case SpinType.Spin0:
-                    nodes.Add(new Node(this.Nodes[0].X + 1, this.Nodes[0].Y + 1, true, this.BackColor));
-                    nodes.Add(this.Nodes[1]);
-                    nodes.Add(new Node(this.Nodes[2].X - 1, this.Nodes[2].Y - 1, true, this.BackColor));
-                    nodes.Add(new Node(this.Nodes[3].X + 1, this.Nodes[3].Y - 1, true, this.BackColor));
-                    break;
-                case SpinType.Spin90:
                     nodes.Add(new Node(this.Nodes[0].X + 1, this.Nodes[0].Y - 1, true, this.BackColor));
                     nodes.Add(this.Nodes[1]);
                     nodes.Add(new Node(this.Nodes[2].X - 1, this.Nodes[2].Y + 1, true, this.BackColor));
-                    nodes.Add(new Node(this.Nodes[3].X - 1, this.Nodes[3].Y - 1, true, this.BackColor));
-
+                    nodes.Add(new Node(this.Nodes[3].X + 1, this.Nodes[3].Y + 1, true, this.BackColor));
                     break;
-                case SpinType.Spin180:
-                    nodes.Add(new Node(this.Nodes[0].X - 1, this.Nodes[0].Y - 1, true, this.BackColor));
+                case SpinType.Spin90:
+                    nodes.Add(new Node(this.Nodes[0].X + 1, this.Nodes[0].Y + 1, true, this.BackColor));
                     nodes.Add(this.Nodes[1]);
-                    nodes.Add(new Node(this.Nodes[2].X + 1, this.Nodes[2].Y + 1, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[2].X - 1, this.Nodes[2].Y - 1, true, this.BackColor));
                     nodes.Add(new Node(this.Nodes[3].X - 1, this.Nodes[3].Y + 1, true, this.BackColor));
 
                     break;
-                case SpinType.Spin270:
+                case SpinType.Spin180:
                     nodes.Add(new Node(this.Nodes[0].X - 1, this.Nodes[0].Y + 1, true, this.BackColor));
                     nodes.Add(this.Nodes[1]);
                     nodes.Add(new Node(this.Nodes[2].X + 1, this.Nodes[2].Y - 1, true, this.BackColor));
-                    nodes.Add(new Node(this.Nodes[3].X + 1, this.Nodes[3].Y + 1, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[3].X - 1, this.Nodes[3].Y - 1, true, this.BackColor));
+
+                    break;
+                case SpinType.Spin270:
+                    nodes.Add(new Node(this.Nodes[0].X - 1, this.Nodes[0].Y - 1, true, this.BackColor));
+                    nodes.Add(this.Nodes[1]);
+                    nodes.Add(new Node(this.Nodes[2].X + 1, this.Nodes[2].Y + 1, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[3].X + 1, this.Nodes[3].Y - 1, true, this.BackColor));
                     break;
             }
             return nodes;
@@ -191,27 +191,27 @@ namespace elsCube
             {
                 case SpinType.Spin0:
                     nodes.Add(this.Nodes[0]);
-                    nodes.Add(new Node(this.Nodes[1].X + 1, this.Nodes[1].Y - 1, true, this.BackColor));
-                    nodes.Add(new Node(this.Nodes[2].X + 2, this.Nodes[2].Y - 2, true, this.BackColor));
-                    nodes.Add(new Node(this.Nodes[3].X + 1, this.Nodes[3].Y + 1, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[1].X + 1, this.Nodes[1].Y + 1, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[2].X + 2, this.Nodes[2].Y + 2, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[3].X + 1, this.Nodes[3].Y - 1, true, this.BackColor));
                     break;
                 case SpinType.Spin90:
                     nodes.Add(this.Nodes[0]);
-                    nodes.Add(new Node(this.Nodes[1].X - 1, this.Nodes[1].Y - 1, true, this.BackColor));
-                    nodes.Add(new Node(this.Nodes[2].X - 2, this.Nodes[2].Y - 2, true, this.BackColor));
-                    nodes.Add(new Node(this.Nodes[3].X + 1, this.Nodes[3].Y - 1, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[1].X - 1, this.Nodes[1].Y + 1, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[2].X - 2, this.Nodes[2].Y + 2, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[3].X + 1, this.Nodes[3].Y + 1, true, this.BackColor));
                     break;
                 case SpinType.Spin180:
                     nodes.Add(this.Nodes[0]);
-                    nodes.Add(new Node(this.Nodes[1].X - 1, this.Nodes[1].Y + 1, true, this.BackColor));
-                    nodes.Add(new Node(this.Nodes[2].X - 2, this.Nodes[2].Y + 2, true, this.BackColor));
-                    nodes.Add(new Node(this.Nodes[3].X - 1, this.Nodes[3].Y - 1, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[1].X - 1, this.Nodes[1].Y - 1, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[2].X - 2, this.Nodes[2].Y - 2, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[3].X - 1, this.Nodes[3].Y + 1, true, this.BackColor));
                     break;
                 case SpinType.Spin270:
                     nodes.Add(this.Nodes[0]);
-                    nodes.Add(new Node(this.Nodes[1].X + 1, this.Nodes[1].Y + 1, true, this.BackColor));
-                    nodes.Add(new Node(this.Nodes[2].X + 2, this.Nodes[2].Y + 2, true, this.BackColor));
-                    nodes.Add(new Node(this.Nodes[3].X - 1, this.Nodes[3].Y + 1, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[1].X + 1, this.Nodes[1].Y - 1, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[2].X + 2, this.Nodes[2].Y - 2, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[3].X - 1, this.Nodes[3].Y - 1, true, this.BackColor));
                     break;
             }
             return nodes;
@@ -223,25 +223,25 @@ namespace elsCube
             switch (this.Spin)
             {
                 case SpinType.Spin0:
-                    nodes.Add(new Node(this.Nodes[0].X + 1, this.Nodes[0].Y + 1, true, this.BackColor));
-                    nodes.Add(this.Nodes[1]);
-                    nodes.Add(new Node(this.Nodes[2].X + 1, this.Nodes[2].Y - 1, true, this.BackColor));
-                    nodes.Add(new Node(this.Nodes[3].X, this.Nodes[3].Y - 2, true, this.BackColor));
-                    break;
-                case SpinType.Spin90:
                     nodes.Add(new Node(this.Nodes[0].X + 1, this.Nodes[0].Y - 1, true, this.BackColor));
                     nodes.Add(this.Nodes[1]);
-                    nodes.Add(new Node(this.Nodes[2].X - 1, this.Nodes[2].Y - 1, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[2].X + 1, this.Nodes[2].Y + 1, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[3].X, this.Nodes[3].Y + 2, true, this.BackColor));
+                    break;
+                case SpinType.Spin90:
+                    nodes.Add(new Node(this.Nodes[0].X + 1, this.Nodes[0].Y + 1, true, this.BackColor));
+                    nodes.Add(this.Nodes[1]);
+                    nodes.Add(new Node(this.Nodes[2].X - 1, this.Nodes[2].Y + 1, true, this.BackColor));
                     nodes.Add(new Node(this.Nodes[3].X - 2, this.Nodes[3].Y, true, this.BackColor));
                     break;
                 case SpinType.Spin180:
-                    nodes.Add(new Node(this.Nodes[0].X - 1, this.Nodes[0].Y - 1, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[0].X - 1, this.Nodes[0].Y + 1, true, this.BackColor));
                     nodes.Add(this.Nodes[1]);
-                    nodes.Add(new Node(this.Nodes[2].X - 1, this.Nodes[2].Y + 1, true, this.BackColor));
-                    nodes.Add(new Node(this.Nodes[3].X, this.Nodes[3].Y + 2, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[2].X - 1, this.Nodes[2].Y - 1, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[3].X, this.Nodes[3].Y - 2, true, this.BackColor));
                     break;
                 case SpinType.Spin270:
-                    nodes.Add(new Node(this.Nodes[0].X - 1, this.Nodes[0].Y + 1, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[0].X - 1, this.Nodes[0].Y - 1, true, this.BackColor));
                     nodes.Add(this.Nodes[1]);
                     nodes.Add(new Node(this.Nodes[2].X + 1, this.Nodes[2].Y + 1, true, this.BackColor));
                     nodes.Add(new Node(this.Nodes[3].X + 2, this.Nodes[3].Y, true, this.BackColor));
@@ -256,28 +256,28 @@ namespace elsCube
             switch (this.Spin)
             {
                 case SpinType.Spin0:
-                    nodes.Add(new Node(this.Nodes[0].X + 1, this.Nodes[0].Y + 1, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[0].X + 1, this.Nodes[0].Y - 1, true, this.BackColor));
                     nodes.Add(this.Nodes[1]);
-                    nodes.Add(new Node(this.Nodes[2].X - 1, this.Nodes[2].Y + 1, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[2].X - 1, this.Nodes[2].Y - 1, true, this.BackColor));
                     nodes.Add(new Node(this.Nodes[3].X - 2, this.Nodes[3].Y, true, this.BackColor));
                     break;
                 case SpinType.Spin90:
-                    nodes.Add(new Node(this.Nodes[0].X + 1, this.Nodes[0].Y - 1, true, this.BackColor));
-                    nodes.Add(this.Nodes[1]);
-                    nodes.Add(new Node(this.Nodes[2].X + 1, this.Nodes[2].Y + 1, true, this.BackColor));
-                    nodes.Add(new Node(this.Nodes[3].X, this.Nodes[3].Y + 2, true, this.BackColor));
-                    break;
-                case SpinType.Spin180:
-                    nodes.Add(new Node(this.Nodes[0].X - 1, this.Nodes[0].Y - 1, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[0].X + 1, this.Nodes[0].Y + 1, true, this.BackColor));
                     nodes.Add(this.Nodes[1]);
                     nodes.Add(new Node(this.Nodes[2].X + 1, this.Nodes[2].Y - 1, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[3].X, this.Nodes[3].Y - 2, true, this.BackColor));
+                    break;
+                case SpinType.Spin180:
+                    nodes.Add(new Node(this.Nodes[0].X - 1, this.Nodes[0].Y + 1, true, this.BackColor));
+                    nodes.Add(this.Nodes[1]);
+                    nodes.Add(new Node(this.Nodes[2].X + 1, this.Nodes[2].Y + 1, true, this.BackColor));
                     nodes.Add(new Node(this.Nodes[3].X + 2, this.Nodes[3].Y, true, this.BackColor));
                     break;
                 case SpinType.Spin270:
-                    nodes.Add(new Node(this.Nodes[0].X - 1, this.Nodes[0].Y + 1, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[0].X - 1, this.Nodes[0].Y - 1, true, this.BackColor));
                     nodes.Add(this.Nodes[1]);
-                    nodes.Add(new Node(this.Nodes[2].X - 1, this.Nodes[2].Y - 1, true, this.BackColor));
-                    nodes.Add(new Node(this.Nodes[3].X, this.Nodes[3].Y - 2, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[2].X - 1, this.Nodes[2].Y + 1, true, this.BackColor));
+                    nodes.Add(new Node(this.Nodes[3].X, this.Nodes[3].Y + 2, true, this.BackColor));
                     break;
             }
             return nodes;
@@ -764,25 +764,25 @@ namespace elsCube
             switch (_cubeType)
             {
                 case CubeType.Cube:
-                    _nodes = new List<Node>() { new Node(7, 23, true, _backColor), new Node(7, 24, true, _backColor), new Node(8, 23, true, _backColor), new Node(8, 24, true, _backColor) };
+                    _nodes = new List<Node>() { new Node(7, 0, true, _backColor), new Node(7, -1, true, _backColor), new Node(8, 0, true, _backColor), new Node(8, -1, true, _backColor) };
                     break;
                 case CubeType.Line:
-                    _nodes = new List<Node>() { new Node(7, 23, true, _backColor), new Node(7, 24, true, _backColor), new Node(7, 25, true, _backColor), new Node(7, 26, true, _backColor) };
+                    _nodes = new List<Node>() { new Node(7, 0, true, _backColor), new Node(7, -1, true, _backColor), new Node(7, -2, true, _backColor), new Node(7, -3, true, _backColor) };
                     break;
                 case CubeType.Corner:
-                    _nodes = new List<Node>() { new Node(7, 23, true, _backColor), new Node(7, 24, true, _backColor), new Node(7, 25, true, _backColor), new Node(8, 23, true, _backColor) };
+                    _nodes = new List<Node>() { new Node(7, 0, true, _backColor), new Node(7, -1, true, _backColor), new Node(7, -2, true, _backColor), new Node(8, 0, true, _backColor) };
                     break;
                 case CubeType.Triangle:
-                    _nodes = new List<Node>() { new Node(6, 23, true, _backColor), new Node(7, 23, true, _backColor), new Node(8, 23, true, _backColor), new Node(7, 24, true, _backColor) };
+                    _nodes = new List<Node>() { new Node(6, 0, true, _backColor), new Node(7, 0, true, _backColor), new Node(8, 0, true, _backColor), new Node(7, -1, true, _backColor) };
                     break;
                 case CubeType.ReverseCorner:
-                    _nodes = new List<Node>() { new Node(8, 23, true, _backColor), new Node(8, 24, true, _backColor), new Node(8, 25, true, _backColor), new Node(7, 23, true, _backColor) };
+                    _nodes = new List<Node>() { new Node(8, 0, true, _backColor), new Node(8, -1, true, _backColor), new Node(8, -2, true, _backColor), new Node(7, 0, true, _backColor) };
                     break;
                 case CubeType.ZType:
-                    _nodes = new List<Node>() { new Node(6, 23, true, _backColor), new Node(7, 23, true, _backColor), new Node(7, 24, true, _backColor), new Node(8, 24, true, _backColor) };
+                    _nodes = new List<Node>() { new Node(6, 0, true, _backColor), new Node(7, 0, true, _backColor), new Node(7, -1, true, _backColor), new Node(8, -1, true, _backColor) };
                     break;
                 case CubeType.ReverseZType:
-                    _nodes = new List<Node>() { new Node(6, 24, true, _backColor), new Node(7, 24, true, _backColor), new Node(7, 23, true, _backColor), new Node(8, 23, true, _backColor) };
+                    _nodes = new List<Node>() { new Node(6, -1, true, _backColor), new Node(7, -1, true, _backColor), new Node(7, 0, true, _backColor), new Node(8, 0, true, _backColor) };
                     break;
             }
         }

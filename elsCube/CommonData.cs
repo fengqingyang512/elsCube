@@ -43,6 +43,10 @@ namespace elsCube
             _bOccupy = occupy;
             _backColor = backColor;
         }
+        public Node()
+        {
+
+        }
         private int _x;
         private int _y;
         private bool _bOccupy = false;
@@ -74,6 +78,17 @@ namespace elsCube
         public static bool operator !=(Node left, Node right)
         {
             return !Equals(left, right);
+        }
+
+        public Node DeepClone()
+        {
+            Node node = new Node();
+            node.BackColor = this.BackColor;
+            node.BOccupy = this.BOccupy;
+            node.BStop = this.BStop;
+            node.X = this.X;
+            node.Y = this.Y;
+            return node;
         }
     }
 }

@@ -87,6 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommonData.cs" />
+    <Compile Include="CommonHelper.cs" />
     <Compile Include="Cube.cs" />
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>

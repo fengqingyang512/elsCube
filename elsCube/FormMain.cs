@@ -13,11 +13,23 @@ namespace elsCube
 {
     public partial class Form_Main : Form
     {
-        private Dictionary<Node, Button> _map = new Dictionary<Node, Button>();
-        private Dictionary<Node, Button> _showMap = new Dictionary<Node, Button>();
-        private List<List<Node>> _nodes = new List<List<Node>>();
+        //private Dictionary<Node, Button> _map = new Dictionary<Node, Button>();
+        //private Dictionary<Node, Button> _showMap = new Dictionary<Node, Button>();
+        private List<List<Node>> _mapNodes = new List<List<Node>>();
+        private List<List<Node>> _showPanelNodes = new List<List<Node>>();
+        Graphics panel_show_graphics;
+        Graphics panel_map_graphics;
+        Brush _borderBrush;
+        Brush noCubeBrush = new SolidBrush(Color.Black);
+        Pen _borderPen;
+        Dictionary<Color, Brush> _cubeBrushDic = new Dictionary<Color, Brush>() { { Color.Red, new SolidBrush(Color.Red) }, { Color.Yellow, new SolidBrush(Color.Yellow) },
+                                                                                { Color.DarkOrange, new SolidBrush(Color.DarkOrange) }, { Color.Blue, new SolidBrush(Color.Blue) },
+                                                                                { Color.White, new SolidBrush(Color.White) }, { Color.Lime, new SolidBrush(Color.Lime) },
+                                                                                { Color.Pink, new SolidBrush(Color.Pink) }, { Color.Black, new SolidBrush(Color.Black) } };
+        private List<List<Node>> _historyCubeNodeList = new List<List<Node>>();
+
         private List<CubeType> _cubeTypes = new List<CubeType>() { CubeType.Cube, CubeType.Line, CubeType.Corner, CubeType.Triangle, CubeType.ReverseCorner, CubeType.ZType, CubeType.ReverseZType };
-        private List<Color> _colors = new List<Color>() { Color.Red, Color.Yellow, Color.Green, Color.Blue, Color.White, Color.Pink, Color.Lime };
+        private List<Color> _colors = new List<Color>() { Color.Red, Color.Yellow, Color.DarkOrange, Color.Blue, Color.White, Color.Pink, Color.Lime };
         private bool _bClose = false;
         private bool _bAccelerate = false;
         private Cube _curCube = null;
@@ -42,52 +54,41 @@ namespace elsCube
         public Form_Main()
         {
             InitializeComponent();
+            DoubleBuffered = true;
         }
 
         private void Form_Main_Load(object sender, EventArgs e)
         {
+            _borderBrush = new SolidBrush(Color.Black);
+            _borderPen = new Pen(_borderBrush);
+            panel_show_graphics =  panel_show.CreateGraphics();
+            panel_map_graphics = panel_game.CreateGraphics();
             InitMap();
-
-            _curCube = CreateCube();
-            _nextCube = CreateCube();
-            ShowNewCube(_nextCube);
-
-            ThreadPool.QueueUserWorkItem(ThreadPro);
         }
 
         private void InitMap()
         {
-            for (int y = MapHeight - 1; y >= 0; y--)
+            panel_show_graphics.Clear(Color.Black);
+            panel_map_graphics.Clear(Color.Black);
+            for (int y = 0; y < MapHeight; y++)
             {
                 List<Node> list = new List<Node>();
                 for (int x = 0; x < MapWidth; x++)
                 {
-                    Button button = new Button();
-                    button.Size = new Size(30, 30);
-                    button.Location = new Point(x * 29, y * 29);
-                    button.FlatStyle = FlatStyle.Flat;
-                    button.Enabled = false;
-                    button.BackColor = Color.Black;
-                    panel_game.Controls.Add(button);
                     Node node = new Node(x, y, false, Color.Black);
-                    _map.Add(node, button);
                     list.Add(node);
                 }
-                _nodes.Add(list);
+                _mapNodes.Add(list);
             }
             for (int k = 0; k < ShowPanleHeight; k++)
             {
+                List<Node> list = new List<Node>();
                 for (int l = 0; l < ShowPanleWidth; l++)
                 {
-                    Button button = new Button();
-                    button.Size = new Size(30, 30);
-                    button.Location = new Point(l * 29, k * 29);
-                    button.FlatStyle = FlatStyle.Flat;
-                    button.BackColor = Color.Black;
-                    button.Enabled = false;
-                    panel_show.Controls.Add(button);
-                    _showMap.Add(new Node(l, k, false, Color.Black), button);
+                    Node node = new Node(l, k, false, Color.Black);
+                    list.Add(node);
                 }
+                _showPanelNodes.Add(list);
             }
         }
 
@@ -132,10 +133,8 @@ namespace elsCube
         {
             if (!this.InvokeRequired)
             {
-                foreach (var k in _showMap)
-                {
-                    k.Value.BackColor = Color.Black;
-                }
+                //panel_show.BackColor = Color.Black;
+                panel_show_graphics.Clear(Color.Black);
             }
             else
             {
@@ -148,13 +147,17 @@ namespace elsCube
         {
             if (!this.InvokeRequired)
             {
+                Brush cubeBrush = new SolidBrush(color);
+                Brush borderBrush = new SolidBrush(Color.Black);
+                Pen borderPen = new Pen(borderBrush);
                 foreach (var node in nodes)
                 {
-                    if (_showMap.ContainsKey(node))
-                    {
-                        _showMap[node].BackColor = color;
-                    }
+                    panel_show_graphics.FillRectangle(cubeBrush, new Rectangle(new Point(node.X * 30, node.Y * 30), new Size(30, 30)));
+                    panel_show_graphics.DrawRectangle(borderPen, new Rectangle(new Point(node.X * 30, node.Y * 30), new Size(30, 30)));
                 }
+                cubeBrush.Dispose();
+                borderBrush.Dispose();
+                borderPen.Dispose();
             }
             else
             {
@@ -165,7 +168,6 @@ namespace elsCube
 
         private bool CheckCubeCanMove(Cube cube, Direction direction)
         {
-
             bool res = true;
             List<Node> nodes = new List<Node>();
             switch (direction)
@@ -174,7 +176,7 @@ namespace elsCube
                     nodes = cube.GetCubeMoveNodeList(Direction.Down);
                     foreach (var node in nodes)
                     {
-                        Node newNode = GetNodeInMap(node.X, node.Y - 1);
+                        Node newNode = GetNodeInMap(node.X, node.Y + 1);
                         if (newNode == null)
                         {
                             res = false;
@@ -250,60 +252,64 @@ namespace elsCube
                     _curCube.Spin = SpinType.Spin0;
                     break;
             }
-
+            List<Node> diffNodes = CommonHelper.CompareToFindNodeList(_curCube.Nodes, availdNodeList);
+            _historyCubeNodeList.Add(diffNodes);
             _curCube.Nodes = availdNodeList;
-            RefreshCubeInMapOccupy(_curCube.Nodes, _curCube.BackColor);
+            CommonHelper.ResetNodeAttr(diffNodes);
+            RefreshCubeInMapOccupy(_curCube.Nodes, diffNodes, _curCube.BackColor);
             RefreshMapShow();
 
         }
 
         private Node GetNodeInMap(int x, int y)
         {
-            if (x < 0 || x > _nodes[0].Count - 1)
+            if (x < 0 || x > _mapNodes[0].Count - 1)
             {
                 return null;
             }
             if (y < 0)
             {
-                return null;
-            }
-            else if (y > _nodes.Count - 1)
-            {
                 return new Node(x, y, false, Color.Black);
             }
-            return _nodes[y][x];
+            else if (y > _mapNodes.Count - 1)
+            {
+                return null;
+            }
+            return _mapNodes[y][x];
         }
 
         private void SetMapNodeStop(List<Node> nodes)
         {
             foreach (var node in nodes)
             {
-                Node n = GetNodeInMap(node.X, node.Y);
+                Node n = GetNodeInMap(node.X, node.Y);               
                 n.BStop = true;
             }
         }
 
-        private void RefreshCubeInMapOccupy(List<Node> nodes, Color color)
+        private void RefreshCubeInMapOccupy(List<Node> nodes, List<Node> diffNodes, Color color)
         {
-            ClearCache();
+            ClearCache(diffNodes);
             foreach (var node in nodes)
             {
                 Node n = GetNodeInMap(node.X, node.Y);
-                n.BOccupy = true;
-                n.BackColor = color;
+                if (n != null)
+                {
+                    n.BOccupy = true;
+                    n.BackColor = color;
+                }
             }
         }
 
-        private void ClearCache()
+        private void ClearCache(List<Node> diffNodes)
         {
-            foreach (var v in _nodes)
+            foreach(var node in diffNodes)
             {
-                foreach (var node in v)
+                Node n = GetNodeInMap(node.X, node.Y);
+                if (n != null)
                 {
-                    if (!node.BStop)
-                    {
-                        node.BOccupy = false;
-                    }
+                    n.BOccupy = false;
+                    n.BackColor = Color.Black;
                 }
             }
         }
@@ -311,7 +317,7 @@ namespace elsCube
         private List<Node> GetAllOccpuyNode()
         {
             List<Node> nodes = new List<Node>();
-            foreach (var list in _nodes)
+            foreach (var list in _mapNodes)
             {
                 foreach (var node in list)
                 {
@@ -321,13 +327,14 @@ namespace elsCube
                     }
                 }
             }
+         
             return nodes;
         }
 
         private List<Node> GetAllNoOccpuyNode()
         {
             List<Node> nodes = new List<Node>();
-            foreach (var list in _nodes)
+            foreach (var list in _historyCubeNodeList)
             {
                 foreach (var node in list)
                 {
@@ -337,6 +344,7 @@ namespace elsCube
                     }
                 }
             }
+            _historyCubeNodeList.Clear();
             return nodes;
         }
 
@@ -347,14 +355,16 @@ namespace elsCube
                 List<Node> nodes = GetAllOccpuyNode();
                 List<Node> noNodes = GetAllNoOccpuyNode();
 
-                foreach (var node in noNodes)
-                {
-                    _map[node].BackColor = Color.Black;
-                }
                 foreach (var node in nodes)
                 {
-                    _map[node].BackColor = node.BackColor;
+                    panel_map_graphics.FillRectangle(_cubeBrushDic[node.BackColor], new Rectangle(new Point(node.X * 30, node.Y * 30), new Size(30, 30)));
+                    panel_map_graphics.DrawRectangle(_borderPen, new Rectangle(new Point(node.X * 30, node.Y * 30), new Size(30, 30)));
                 }
+                foreach (var node in noNodes)
+                {
+                    panel_map_graphics.FillRectangle(noCubeBrush, new Rectangle(new Point(node.X * 30, node.Y * 30), new Size(30, 30)));
+                }
+                
             }
             else
             {
@@ -382,8 +392,11 @@ namespace elsCube
             {
                 if (CheckCubeCanMove(_curCube, Direction.Down))
                 {
+                    List<Node> tempNodes = CommonHelper.DeepCloneNodeList(_curCube.Nodes);
                     _curCube.Down();
-                    RefreshCubeInMapOccupy(_curCube.Nodes, _curCube.BackColor);
+                    List<Node> diffNodes = CommonHelper.CompareToFindNodeList(tempNodes, _curCube.Nodes);
+                    _historyCubeNodeList.Add(CommonHelper.ResetNodeAttr(diffNodes));
+                    RefreshCubeInMapOccupy(_curCube.Nodes, diffNodes, _curCube.BackColor);
                     RefreshMapShow();
                 }
                 else
@@ -420,10 +433,10 @@ namespace elsCube
         private bool CheckGameResult()
         {
             bool complete = false;
-            for (int i = 0; i < _nodes.Count; i++)
+            for (int i = _mapNodes.Count - 1; i >= 0; i--)
             {
                 bool bComplete = true;
-                foreach (var node in _nodes[i])
+                foreach (var node in _mapNodes[i])
                 {
                     if (!node.BStop)
                     {
@@ -432,23 +445,29 @@ namespace elsCube
                 }
                 if (bComplete)
                 {
-                    for (int j = i + 1; j < _nodes.Count; j++)
+                    List<Node> nodes = new List<Node>();
+                    for (int j = i - 1; j >= 0; j--)
                     {
-                        for (int k = 0; k < _nodes[j].Count; k++)
+                        for (int k = 0; k < _mapNodes[j].Count; k++)
                         {
-                            if (_nodes[j][k].BStop)
+                            if (_mapNodes[j][k].BStop)
                             {
-                                _nodes[j][k].BStop = false;
-                                _nodes[j][k].BOccupy = false;
-                                _nodes[j - 1][k].BStop = true;
-                                _nodes[j - 1][k].BOccupy = true;
+                                _mapNodes[j][k].BStop = false;
+                                _mapNodes[j][k].BOccupy = false;
+                                _mapNodes[j + 1][k].BStop = true;
+                                _mapNodes[j + 1][k].BOccupy = true;
+                                _mapNodes[j + 1][k].BackColor = _mapNodes[j][k].BackColor;
+                                nodes.Add(_mapNodes[j][k]);
+                                
                             }
                             else
                             {
-                                _nodes[j - 1][k].BStop = false;
-                                _nodes[j - 1][k].BOccupy = false;
+                                _mapNodes[j + 1][k].BStop = false;
+                                _mapNodes[j + 1][k].BOccupy = false;
+                                nodes.Add(_mapNodes[j + 1][k]);
                             }
                         }
+                        _historyCubeNodeList.Add(nodes);
                     }
                     complete = true;
                 }
@@ -545,27 +564,28 @@ namespace elsCube
             {
                 return;
             }
-            lock (_locker)
+            if (!this.InvokeRequired)
             {
-                if (!this.InvokeRequired)
+                button_left.Visible = false;
+                Thread.Sleep(20);
+                button_left.Visible = true;
+                if (CheckCubeCanMove(_curCube, Direction.Left))
                 {
-                    button_left.Visible = false;
-                    Thread.Sleep(20);
-                    button_left.Visible = true;
-                    if (CheckCubeCanMove(_curCube, Direction.Left))
-                    {
-                        _curCube?.Left();
-                        RefreshCubeInMapOccupy(_curCube.Nodes, _curCube.BackColor);
-                        RefreshMapShow();
-                    }
+                    List<Node> tempNodes = CommonHelper.DeepCloneNodeList(_curCube.Nodes);
+                    _curCube?.Left();
+                    List<Node> diffNodes = CommonHelper.CompareToFindNodeList(tempNodes, _curCube.Nodes);
+                    _historyCubeNodeList.Add(CommonHelper.ResetNodeAttr(diffNodes));
+                    RefreshCubeInMapOccupy(_curCube.Nodes, diffNodes, _curCube.BackColor);
+                    RefreshMapShow();
+                }
 
-                }
-                else
-                {
-                    MoveDel leftDel = new MoveDel(Left);
-                    this.Invoke(leftDel);
-                }
             }
+            else
+            {
+                MoveDel leftDel = new MoveDel(Left);
+                this.Invoke(leftDel);
+            }
+
         }
 
         private void Right()
@@ -574,26 +594,28 @@ namespace elsCube
             {
                 return;
             }
-            lock (_locker)
+
+            if (!this.InvokeRequired)
             {
-                if (!this.InvokeRequired)
+                button_right.Visible = false;
+                Thread.Sleep(20);
+                button_right.Visible = true;
+                if (CheckCubeCanMove(_curCube, Direction.Right))
                 {
-                    button_right.Visible = false;
-                    Thread.Sleep(20);
-                    button_right.Visible = true;
-                    if (CheckCubeCanMove(_curCube, Direction.Right))
-                    {
-                        _curCube?.Right();
-                        RefreshCubeInMapOccupy(_curCube.Nodes, _curCube.BackColor);
-                        RefreshMapShow();
-                    }
-                }
-                else
-                {
-                    MoveDel RightDel = new MoveDel(Right);
-                    this.Invoke(RightDel);
+                    List<Node> tempNodes = CommonHelper.DeepCloneNodeList(_curCube.Nodes);
+                    _curCube?.Right();
+                    List<Node> diffNodes = CommonHelper.CompareToFindNodeList(tempNodes, _curCube.Nodes);
+                    _historyCubeNodeList.Add(CommonHelper.ResetNodeAttr(diffNodes));
+                    RefreshCubeInMapOccupy(_curCube.Nodes, diffNodes, _curCube.BackColor);
+                    RefreshMapShow();
                 }
             }
+            else
+            {
+                MoveDel RightDel = new MoveDel(Right);
+                this.Invoke(RightDel);
+            }
+
         }
 
         private void Down()
@@ -643,6 +665,15 @@ namespace elsCube
         protected override void WndProc(ref Message m)
         {
             base.WndProc(ref m);
+        }
+
+        private void ToolStripMenuItem_start_Click(object sender, EventArgs e)
+        {
+            _curCube = CreateCube();
+            _nextCube = CreateCube();
+            ShowNewCube(_nextCube);
+
+            ThreadPool.QueueUserWorkItem(ThreadPro);
         }
     }
 }
