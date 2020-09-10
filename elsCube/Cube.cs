@@ -759,6 +759,7 @@ namespace elsCube
             }
             return nodes;
         }
+
         private void Init()
         {
             switch (_cubeType)

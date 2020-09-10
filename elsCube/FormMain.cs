@@ -13,8 +13,6 @@ namespace elsCube
 {
     public partial class Form_Main : Form
     {
-        //private Dictionary<Node, Button> _map = new Dictionary<Node, Button>();
-        //private Dictionary<Node, Button> _showMap = new Dictionary<Node, Button>();
         private List<List<Node>> _mapNodes = new List<List<Node>>();
         private List<List<Node>> _showPanelNodes = new List<List<Node>>();
         Graphics panel_show_graphics;
@@ -57,15 +55,166 @@ namespace elsCube
             DoubleBuffered = true;
         }
 
+        #region UI Func
         private void Form_Main_Load(object sender, EventArgs e)
         {
             _borderBrush = new SolidBrush(Color.Black);
             _borderPen = new Pen(_borderBrush);
-            panel_show_graphics =  panel_show.CreateGraphics();
+            panel_show_graphics = panel_show.CreateGraphics();
             panel_map_graphics = panel_game.CreateGraphics();
             InitMap();
         }
 
+        private void Form_Main_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            _bClose = true;
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            switch (keyData)
+            {
+                case Keys.Down:
+                    Down();
+                    break;
+                case Keys.Left:
+                    Left();
+                    break;
+                case Keys.Right:
+                    Right();
+                    break;
+                case Keys.Up:
+                    Up();
+                    break;
+                case Keys.Space:
+                    Spin();
+                    break;
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        protected override void WndProc(ref Message m)
+        {
+            base.WndProc(ref m);
+        }
+
+        private void ToolStripMenuItem_start_Click(object sender, EventArgs e)
+        {
+            _curCube = CreateCube();
+            _nextCube = CreateCube();
+            ShowNewCube(_nextCube);
+
+            ThreadPool.QueueUserWorkItem(ThreadPro);
+        }
+        #endregion
+
+        #region Private Func
+        #region Move
+        private void Left()
+        {
+            if (_bPause)
+            {
+                return;
+            }
+            if (!this.InvokeRequired)
+            {
+                button_left.Visible = false;
+                Thread.Sleep(20);
+                button_left.Visible = true;
+                if (CheckCubeCanMove(_curCube, Direction.Left))
+                {
+                    List<Node> tempNodes = CommonHelper.DeepCloneNodeList(_curCube.Nodes);
+                    _curCube?.Left();
+                    List<Node> diffNodes = CommonHelper.CompareToFindNodeList(tempNodes, _curCube.Nodes);
+                    _historyCubeNodeList.Add(CommonHelper.ResetNodeAttr(diffNodes));
+                    RefreshCubeInMapOccupy(_curCube.Nodes, diffNodes, _curCube.BackColor);
+                    RefreshMapShow();
+                }
+
+            }
+            else
+            {
+                MoveDel leftDel = new MoveDel(Left);
+                this.Invoke(leftDel);
+            }
+
+        }
+
+        private void Right()
+        {
+            if (_bPause)
+            {
+                return;
+            }
+
+            if (!this.InvokeRequired)
+            {
+                button_right.Visible = false;
+                Thread.Sleep(20);
+                button_right.Visible = true;
+                if (CheckCubeCanMove(_curCube, Direction.Right))
+                {
+                    List<Node> tempNodes = CommonHelper.DeepCloneNodeList(_curCube.Nodes);
+                    _curCube?.Right();
+                    List<Node> diffNodes = CommonHelper.CompareToFindNodeList(tempNodes, _curCube.Nodes);
+                    _historyCubeNodeList.Add(CommonHelper.ResetNodeAttr(diffNodes));
+                    RefreshCubeInMapOccupy(_curCube.Nodes, diffNodes, _curCube.BackColor);
+                    RefreshMapShow();
+                }
+            }
+            else
+            {
+                MoveDel RightDel = new MoveDel(Right);
+                this.Invoke(RightDel);
+            }
+
+        }
+
+        private void Down()
+        {
+            if (_bPause)
+            {
+                return;
+            }
+            if (!this.InvokeRequired)
+            {
+                button_down.Visible = false;
+                Thread.Sleep(20);
+                button_down.Visible = true;
+                _bAccelerate = true;
+            }
+            else
+            {
+                MoveDel DownDel = new MoveDel(Down);
+                this.Invoke(DownDel);
+            }
+        }
+
+        private void Up()
+        {
+            if (!this.InvokeRequired)
+            {
+                button_up.Visible = false;
+                Thread.Sleep(20);
+                button_up.Visible = true;
+                _bPause = !_bPause;
+                if (_bPause)
+                {
+                    label_showPause.Text = "继续";
+                }
+                else
+                {
+                    label_showPause.Text = "暂停";
+                }
+            }
+            else
+            {
+                MoveDel UpDel = new MoveDel(Up);
+                this.Invoke(UpDel);
+            }
+        }
+        #endregion
         private void InitMap()
         {
             panel_show_graphics.Clear(Color.Black);
@@ -282,7 +431,7 @@ namespace elsCube
         {
             foreach (var node in nodes)
             {
-                Node n = GetNodeInMap(node.X, node.Y);               
+                Node n = GetNodeInMap(node.X, node.Y);
                 n.BStop = true;
             }
         }
@@ -303,7 +452,7 @@ namespace elsCube
 
         private void ClearCache(List<Node> diffNodes)
         {
-            foreach(var node in diffNodes)
+            foreach (var node in diffNodes)
             {
                 Node n = GetNodeInMap(node.X, node.Y);
                 if (n != null)
@@ -327,7 +476,7 @@ namespace elsCube
                     }
                 }
             }
-         
+
             return nodes;
         }
 
@@ -364,7 +513,7 @@ namespace elsCube
                 {
                     panel_map_graphics.FillRectangle(noCubeBrush, new Rectangle(new Point(node.X * 30, node.Y * 30), new Size(30, 30)));
                 }
-                
+
             }
             else
             {
@@ -458,7 +607,7 @@ namespace elsCube
                                 _mapNodes[j + 1][k].BOccupy = true;
                                 _mapNodes[j + 1][k].BackColor = _mapNodes[j][k].BackColor;
                                 nodes.Add(_mapNodes[j][k]);
-                                
+
                             }
                             else
                             {
@@ -528,152 +677,7 @@ namespace elsCube
                 Thread.Sleep(20);
             }
         }
+        #endregion
 
-        private void Form_Main_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            _bClose = true;
-        }
-
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-        {
-            switch (keyData)
-            {
-                case Keys.Down:
-                    Down();
-                    break;
-                case Keys.Left:
-                    Left();
-                    break;
-                case Keys.Right:
-                    Right();
-                    break;
-                case Keys.Up:
-                    Up();
-                    break;
-                case Keys.Space:
-                    Spin();
-                    break;
-            }
-
-            return base.ProcessCmdKey(ref msg, keyData);
-        }
-
-        private void Left()
-        {
-            if (_bPause)
-            {
-                return;
-            }
-            if (!this.InvokeRequired)
-            {
-                button_left.Visible = false;
-                Thread.Sleep(20);
-                button_left.Visible = true;
-                if (CheckCubeCanMove(_curCube, Direction.Left))
-                {
-                    List<Node> tempNodes = CommonHelper.DeepCloneNodeList(_curCube.Nodes);
-                    _curCube?.Left();
-                    List<Node> diffNodes = CommonHelper.CompareToFindNodeList(tempNodes, _curCube.Nodes);
-                    _historyCubeNodeList.Add(CommonHelper.ResetNodeAttr(diffNodes));
-                    RefreshCubeInMapOccupy(_curCube.Nodes, diffNodes, _curCube.BackColor);
-                    RefreshMapShow();
-                }
-
-            }
-            else
-            {
-                MoveDel leftDel = new MoveDel(Left);
-                this.Invoke(leftDel);
-            }
-
-        }
-
-        private void Right()
-        {
-            if (_bPause)
-            {
-                return;
-            }
-
-            if (!this.InvokeRequired)
-            {
-                button_right.Visible = false;
-                Thread.Sleep(20);
-                button_right.Visible = true;
-                if (CheckCubeCanMove(_curCube, Direction.Right))
-                {
-                    List<Node> tempNodes = CommonHelper.DeepCloneNodeList(_curCube.Nodes);
-                    _curCube?.Right();
-                    List<Node> diffNodes = CommonHelper.CompareToFindNodeList(tempNodes, _curCube.Nodes);
-                    _historyCubeNodeList.Add(CommonHelper.ResetNodeAttr(diffNodes));
-                    RefreshCubeInMapOccupy(_curCube.Nodes, diffNodes, _curCube.BackColor);
-                    RefreshMapShow();
-                }
-            }
-            else
-            {
-                MoveDel RightDel = new MoveDel(Right);
-                this.Invoke(RightDel);
-            }
-
-        }
-
-        private void Down()
-        {
-            if (_bPause)
-            {
-                return;
-            }
-            if (!this.InvokeRequired)
-            {
-                button_down.Visible = false;
-                Thread.Sleep(20);
-                button_down.Visible = true;
-                _bAccelerate = true;
-            }
-            else
-            {
-                MoveDel DownDel = new MoveDel(Down);
-                this.Invoke(DownDel);
-            }
-        }
-
-        private void Up()
-        {
-            if (!this.InvokeRequired)
-            {
-                button_up.Visible = false;
-                Thread.Sleep(20);
-                button_up.Visible = true;
-                _bPause = !_bPause;
-                if (_bPause)
-                {
-                    label_showPause.Text = "继续";
-                }
-                else
-                {
-                    label_showPause.Text = "暂停";
-                }
-            }
-            else
-            {
-                MoveDel UpDel = new MoveDel(Up);
-                this.Invoke(UpDel);
-            }
-        }
-
-        protected override void WndProc(ref Message m)
-        {
-            base.WndProc(ref m);
-        }
-
-        private void ToolStripMenuItem_start_Click(object sender, EventArgs e)
-        {
-            _curCube = CreateCube();
-            _nextCube = CreateCube();
-            ShowNewCube(_nextCube);
-
-            ThreadPool.QueueUserWorkItem(ThreadPro);
-        }
     }
 }
